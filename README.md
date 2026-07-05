@@ -1,4 +1,4 @@
-# ProjectX: Crowd Counting with YOLOv8
+# ProjectX: Multi-Person Tracking System with YOLOv8
 
 This repository provides a complete pipeline for training and evaluating a crowd counting model using YOLOv8. It includes tools to convert `.mat` head-point annotations into YOLO bounding box formats.
 
