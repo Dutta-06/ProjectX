@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 import yaml
 import shutil
+import argparse
 from pathlib import Path
 
 def create_yolo_annotations(base_dir: Path, output_dir: Path, box_size=20):
@@ -117,27 +118,29 @@ def create_dataset_yaml(output_dir: Path):
     return yaml_path
 
 if __name__ == '__main__':
-    # --- Configuration ---
-    # Define the paths to your original train and test data
-    TRAIN_DATA_DIR = Path('crowd_wala_dataset\\train_data')
-    TEST_DATA_DIR = Path('crowd_wala_dataset\\test_data')
-    
-    # Define the output directory for the YOLO-formatted dataset
-    YOLO_DATASET_DIR = Path('./yolo_dataset')
-    # -------------------
+    parser = argparse.ArgumentParser(description="Prepare dataset for YOLOv8 crowd counting.")
+    parser.add_argument('--train_dir', type=str, required=True, help="Path to the original train data directory")
+    parser.add_argument('--test_dir', type=str, required=True, help="Path to the original test data directory")
+    parser.add_argument('--output_dir', type=str, default='./yolo_dataset', help="Output directory for YOLO dataset")
+    parser.add_argument('--box_size', type=int, default=20, help="Bounding box size for head points")
+    args = parser.parse_args()
+
+    TRAIN_DATA_DIR = Path(args.train_dir)
+    TEST_DATA_DIR = Path(args.test_dir)
+    YOLO_DATASET_DIR = Path(args.output_dir)
 
     print("Starting dataset preparation process...")
     
     # Create output directory
-    YOLO_DATASET_DIR.mkdir(exist_ok=True)
+    YOLO_DATASET_DIR.mkdir(parents=True, exist_ok=True)
     
     # Process training data
     print("\n--- Processing Training Data ---")
-    create_yolo_annotations(TRAIN_DATA_DIR, YOLO_DATASET_DIR)
+    create_yolo_annotations(TRAIN_DATA_DIR, YOLO_DATASET_DIR, args.box_size)
     
     # Process test data (will be used as the validation set)
     print("\n--- Processing Test Data (for validation) ---")
-    create_yolo_annotations(TEST_DATA_DIR, YOLO_DATASET_DIR)
+    create_yolo_annotations(TEST_DATA_DIR, YOLO_DATASET_DIR, args.box_size)
     
     # Create the dataset.yaml file
     print("\n--- Creating dataset.yaml ---")

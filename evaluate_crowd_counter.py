@@ -1,3 +1,4 @@
+import argparse
 import os
 import glob
 import cv2
@@ -100,13 +101,10 @@ def evaluate_model(model_path, test_image_dir, test_gt_dir):
     print("Lower values for all metrics indicate better model performance.")
 
 if __name__ == '__main__':
-    # --- Configuration ---
-    # Path to the BEST trained model from the training script
-    TRAINED_MODEL_PATH = './yolo_training_runs/crowd_counting_experiment2/weights/best.pt'
+    parser = argparse.ArgumentParser(description="Evaluate YOLO crowd counting model.")
+    parser.add_argument('--model_path', type=str, required=True, help="Path to trained YOLO .pt file")
+    parser.add_argument('--test_img_dir', type=str, required=True, help="Path to test images")
+    parser.add_argument('--test_gt_dir', type=str, required=True, help="Path to test ground truth .mat files")
+    args = parser.parse_args()
     
-    # Path to the original test dataset folders
-    TEST_IMAGE_DIR = 'crowd_wala_dataset\\test_data\images'
-    TEST_GT_DIR = 'crowd_wala_dataset\\test_data\ground_truth'
-    # -------------------
-    
-    evaluate_model(TRAINED_MODEL_PATH, TEST_IMAGE_DIR, TEST_GT_DIR)
+    evaluate_model(args.model_path, args.test_img_dir, args.test_gt_dir)

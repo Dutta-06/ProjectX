@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+
+# Project Specific
+data/
+yolo_dataset/
+yolo_training_runs/
+*.pt
+
+# OS
+.DS_Store
+Thumbs.db

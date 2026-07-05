@@ -1,3 +1,4 @@
+import argparse
 from ultralytics import YOLO
 import os
 
@@ -41,14 +42,11 @@ def train_model(dataset_yaml_path, epochs=100, batch_size=8, model_variant='yolo
         print(f"An error occurred during training: {e}")
 
 if __name__ == '__main__':
-    # --- Configuration ---
-    # Path to the yaml file created by prepare_data.py
-    DATASET_YAML = 'yolo_dataset\\dataset.yaml'
+    parser = argparse.ArgumentParser(description="Train a YOLOv8 model for crowd counting.")
+    parser.add_argument('--dataset_yaml', type=str, required=True, help="Path to the dataset.yaml file")
+    parser.add_argument('--epochs', type=int, default=50, help="Number of training epochs")
+    parser.add_argument('--batch_size', type=int, default=16, help="Batch size for training")
+    parser.add_argument('--model', type=str, default='yolov8n.pt', help="YOLOv8 base model variant")
+    args = parser.parse_args()
     
-    # Training parameters
-    NUM_EPOCHS = 50  # Adjust as needed
-    BATCH_SIZE = 16  # Adjust based on your GPU memory
-    MODEL_VARIANT = 'yolov8n.pt' # 'yolov8s.pt' or 'yolov8m.pt' for better accuracy
-    # -------------------
-    
-    train_model(DATASET_YAML, NUM_EPOCHS, BATCH_SIZE, MODEL_VARIANT)
+    train_model(args.dataset_yaml, args.epochs, args.batch_size, args.model)
